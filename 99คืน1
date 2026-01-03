@@ -1,0 +1,157 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local Window = WindUI:CreateWindow({
+    Title = "O-maxhua",
+    Icon = "", -- lucide icon. optional
+    Author = "by .ftgs and .ftgs", -- optional
+    OpenButton = {
+        Title = "Open O-maxhua",
+        Icon = "monitor",
+        CornerRadius = UDim.new(0,16),
+        StrokeThickness = 2,
+        Color = ColorSequence.new( -- gradient
+            Color3.fromHex("FF0F7B"),
+            Color3.fromHex("F89B29")
+        ),
+        OnlyMobile = false,
+        Enabled = true,
+        Draggable = true,
+    }
+})
+
+local Tab = Window:Tab({
+    Title = "Main",
+    Icon = "bird", -- optional
+    Locked = false,
+})
+Tab:Select() -- Select Tab
+
+local player = game.Players.LocalPlayer
+local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+
+if not humanoid then
+    warn("Humanoid not found!")
+    return
+end
+
+Tab:Button({
+    Title = "วิ่งเร็ว",
+    Icon = "zap",
+    Callback = function()
+        humanoid.WalkSpeed = 50
+    end
+})
+
+Tab:Button({
+    Title = "บินได้",
+    Icon = "airplane",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
+    end
+})
+
+Tab:Button({
+    Title = "ออโต้ตัดไม้",
+    Icon = "tree",
+    Callback = function()
+        print("ออโต้ตัดไม้ทำงาน")
+    end
+})
+
+Tab:Button({
+    Title = "ดึงเชื้อเพลิง",
+    Icon = "box",
+    Callback = function()
+        local character = player.Character
+        if not character then return end
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then return end
+        for _, v in pairs(game.Workspace:GetDescendants()) do
+            if v.Name == "Fuel" or v.Name == "Coal" then
+                v.CanCollide = false
+                v.CanTouch = false
+                v.Position = humanoidRootPart.Position
+            end
+        end
+    end
+})
+
+Tab:Button({
+    Title = "ภาพสว่างไม่ตอนกลางคืน",
+    Icon = "sun",
+    Callback = function()
+        game.Lighting.TimeOfDay = 12 -- ตั้งเวลาเป็นเที่ยงวัน
+        game.Lighting.Brightness = 2 -- ตั้งความสว่าง
+    end
+})
+
+Tab:Button({
+    Title = "เดินทะลุ",
+    Icon = "walk",
+    Callback = function()
+        local rs = game:GetService("RunService")
+        local p = game.Players.LocalPlayer
+        rs.Stepped:Connect(function()
+            if p.Character then
+                for _, v in pairs(p.Character:GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = false -- ปิดการชนทุกส่วน
+                    end
+                end
+            end
+        end)
+        -- ล็อคพื้นให้เดินได้ (กันร่วง)
+        workspace.DescendantAdded:Connect(function(d)
+            if d:IsA("BasePart") and (d.Name == "Baseplate" or d.Name == "Floor") then
+                d.CanCollide = true
+            end
+        end)
+    end
+})
+
+local Tab2 = Window:Tab({
+    Title = "เมนูช่วยเหลือ",
+    Icon = "help-circle", -- optional
+    Locked = false,
+})
+
+Tab2:Button({
+    Title = "อมตะ",
+    Icon = "shield",
+    Callback = function()
+        humanoid.Health = math.huge
+        humanoid.MaxHealth = math.huge
+        humanoid.BreakJointsOnDeath = false
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+        humanoid.Died:Connect(function()
+            humanoid.Health = math.huge
+        end)
+    end
+})
+
+Tab2:Button({
+    Title = "เปิดกล่องเร็ว",
+    Icon = "box",
+    Callback = function()
+        for _, v in pairs(game.Workspace:GetDescendants()) do
+            if v.Name == "Chest" or v.Name == "Box" then
+                v.CanCollide = false
+                v.CanTouch = false
+                firetouchall(v)
+            end
+        end
+    end
+})
+
+local Tab3 = Window:Tab({
+    Title = "ตัวเลือกสคริป",
+    Icon = "code", -- optional
+    Locked = false,
+})
+
+Tab3:Button({
+    Title = "สคริปไทย",
+    Icon = "flag",
+    Callback = function()
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/42f9abd64175621aadd9f6993f4c97a5.lua"))()
+    end
+})
